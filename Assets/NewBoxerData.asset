@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d334a444d48a5974193a416b847eec88, type: 3}
+  m_Name: NewBoxerData
+  m_EditorClassIdentifier: 
+  associatedPrefab: {fileID: 100006, guid: 9a7360c73cc871546bf5dda47450215b, type: 3}
+  AttackRatio: 1
+  DamagePerAttack: 2
+  HitPoints: 10
+  JumpHeight: 1
+  ReachField: 0.5
+  Speed: 5

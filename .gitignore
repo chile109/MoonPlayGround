@@ -59,3 +59,5 @@ sysinfo.txt
 crashlytics-build.properties
 
 .vscode/
+Assets/GDR_FightingGameCharacters/
+Assets/GDR_FightingGameCharacters.meta
