@@ -25,6 +25,7 @@ public class BoxerController : MonoBehaviour
     private float _jumpHeight = 1f;
     private float _reachField = 0.5f;
     private float _speed = 5f; //movement speed
+    private bool _isAir = false;
 
     void Start()
     {
@@ -44,7 +45,7 @@ public class BoxerController : MonoBehaviour
         {
             PerformPunch();
         }
-        else if (Input.GetKeyDown(KeyCode.K))
+        else if (Input.GetKey(KeyCode.K))
         {
             PerformBlocking(true);
         }
@@ -59,8 +60,12 @@ public class BoxerController : MonoBehaviour
 
         if (Input.GetKey(KeyCode.D))
             rb.AddForce(Vector3.right * _speed);
+
         if (Input.GetKey(KeyCode.A))
             rb.AddForce(Vector3.left * _speed);
+
+        if (Input.GetKey(KeyCode.W))
+            PerformJump();
     }
 
     void PerformBlocking(bool isBlocking)
@@ -83,6 +88,30 @@ public class BoxerController : MonoBehaviour
 
     void PerformJump()
     {
+        if (!_isAir)
+        {
+            rb.AddForce(new Vector3(0, _jumpHeight, 0), ForceMode.Impulse);
+            // BoxerAni.SetInteger("state", currentState = STATE_JUMP);
+        }
+    }
 
+    private void OnCollisionEnter(Collision collision)
+    {
+        Debug.Log("OnCollisionEnter");
+        rb.useGravity = false;
+        _isAir = false;
+    }
+
+    private void OnCollisionExit(Collision collision)
+    {
+        Debug.Log("OnCollisionExit");
+        rb.useGravity = true;
+        _isAir = true;
+    }
+
+    private void OnCollisionStay(Collision collision)
+    {
+        Debug.Log("OnCollisionStay");
+        _isAir = false;
     }
 }
