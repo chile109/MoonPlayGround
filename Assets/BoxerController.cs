@@ -17,6 +17,7 @@ public class BoxerController : MonoBehaviour
     public Rack RackStatus = Rack.Idle;
     public Animator BoxerAni;
     public BoxerDataSO data;
+    public Rigidbody rb;
 
     private float _attackRatio = 1f; //time between attacks
     private float _damagePerAttack = 2f; //damage each attack deals
@@ -27,6 +28,7 @@ public class BoxerController : MonoBehaviour
 
     void Start()
     {
+        rb = GetComponent<Rigidbody>();
         _attackRatio = data.AttackRatio;
         _damagePerAttack = data.DamagePerAttack;
         _hitPoints = data.HitPoints;
@@ -54,6 +56,11 @@ public class BoxerController : MonoBehaviour
         {
             PerformKick();
         }
+
+        if (Input.GetKey(KeyCode.D))
+            rb.AddForce(Vector3.right * _speed);
+        if (Input.GetKey(KeyCode.A))
+            rb.AddForce(Vector3.left * _speed);
     }
 
     void PerformBlocking(bool isBlocking)
