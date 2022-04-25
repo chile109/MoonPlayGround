@@ -14,6 +14,7 @@ public enum Rack
 
 public class BoxerController : MonoBehaviour
 {
+    public bool IsSanbag = false;
     public Rack RackStatus = Rack.Idle;
     public Animator BoxerAni;
     public BoxerDataSO data;
@@ -30,6 +31,7 @@ public class BoxerController : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody>();
+        RackStatus = Rack.Idle;
         _attackRatio = data.AttackRatio;
         _damagePerAttack = data.DamagePerAttack;
         _hitPoints = data.HitPoints;
@@ -41,6 +43,9 @@ public class BoxerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (IsSanbag)
+            return;
+
         if (Input.GetKeyDown(KeyCode.J))
         {
             PerformPunch();
@@ -70,19 +75,19 @@ public class BoxerController : MonoBehaviour
 
     void PerformBlocking(bool isBlocking)
     {
-        Debug.Log("PerformBlocking");
+        // Debug.Log("PerformBlocking");
         BoxerAni.SetBool("Blocking", isBlocking);
     }
 
     void PerformPunch()
     {
-        Debug.Log("PerformPunch");
+        // Debug.Log("PerformPunch");
         BoxerAni.SetTrigger("Punch");
     }
 
     void PerformKick()
     {
-        Debug.Log("PerformKick");
+        // Debug.Log("PerformKick");
         BoxerAni.SetTrigger("Kick");
     }
 
@@ -97,21 +102,38 @@ public class BoxerController : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        Debug.Log("OnCollisionEnter");
+        // Debug.Log("OnCollisionEnter");
         rb.useGravity = false;
         _isAir = false;
     }
 
     private void OnCollisionExit(Collision collision)
     {
-        Debug.Log("OnCollisionExit");
+        // Debug.Log("OnCollisionExit");
         rb.useGravity = true;
         _isAir = true;
     }
 
     private void OnCollisionStay(Collision collision)
     {
-        Debug.Log("OnCollisionStay");
+        // Debug.Log("OnCollisionStay");
         _isAir = false;
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.tag == "Player")
+        {
+            StartCoroutine(PerformInjured());
+            Debug.Log(other.name);
+        }
+    }
+
+    IEnumerator PerformInjured()
+    {
+        PerformBlocking(true);
+        yield return new WaitForSeconds(1f);
+        PerformBlocking(false);
+        Debug.Log("PerformInjured");
     }
 }
