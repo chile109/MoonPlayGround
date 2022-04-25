@@ -20,6 +20,9 @@ public class BoxerController : MonoBehaviour
     public BoxerDataSO data;
     public Rigidbody rb;
 
+    public AttackPointController Punch_APC;
+    public AttackPointController Kick_APC;
+
     private float _attackRatio = 1f; //time between attacks
     private float _damagePerAttack = 2f; //damage each attack deals
     private float _hitPoints = 10f; //when units or buildings suffer damage, they lose hitpoints
@@ -83,12 +86,14 @@ public class BoxerController : MonoBehaviour
     {
         // Debug.Log("PerformPunch");
         BoxerAni.SetTrigger("Punch");
+        Punch_APC.gameObject.SetActive(true);
     }
 
     void PerformKick()
     {
         // Debug.Log("PerformKick");
         BoxerAni.SetTrigger("Kick");
+        Kick_APC.gameObject.SetActive(true);
     }
 
     void PerformJump()
@@ -120,13 +125,9 @@ public class BoxerController : MonoBehaviour
         _isAir = false;
     }
 
-    private void OnTriggerEnter(Collider other)
+    public void OnInjured()
     {
-        if (other.tag == "Player")
-        {
-            StartCoroutine(PerformInjured());
-            Debug.Log(other.name);
-        }
+        StartCoroutine(PerformInjured());
     }
 
     IEnumerator PerformInjured()
