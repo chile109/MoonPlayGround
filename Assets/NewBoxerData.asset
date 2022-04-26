@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   associatedPrefab: {fileID: 100006, guid: 9a7360c73cc871546bf5dda47450215b, type: 3}
   AttackRatio: 1
-  DamagePerAttack: 2
-  HitPoints: 10
+  DamagePerAttack: 10
+  HitPoints: 100
   JumpHeight: 1
   ReachField: 0.5
   Speed: 30

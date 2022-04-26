@@ -9,7 +9,8 @@ public enum Rack
     Punch,
     Kick,
     Jump,
-    Hurt,
+    Injured,
+    KnockDown,
 }
 
 public class BoxerController : MonoBehaviour
@@ -24,8 +25,8 @@ public class BoxerController : MonoBehaviour
     public AttackPointController Kick_APC;
 
     private float _attackRatio = 1f; //time between attacks
-    private float _damagePerAttack = 2f; //damage each attack deals
-    private float _hitPoints = 10f; //when units or buildings suffer damage, they lose hitpoints
+    private int _damagePerAttack = 2; //damage each attack deals
+    private int _hitPoints = 100; //when units or buildings suffer damage, they lose hitpoints
     private float _jumpHeight = 1f;
     private float _reachField = 0.5f;
     private float _speed = 5f; //movement speed
@@ -33,6 +34,9 @@ public class BoxerController : MonoBehaviour
 
     void Start()
     {
+        if (IsSanbag)
+            return;
+
         rb = GetComponent<Rigidbody>();
         RackStatus = Rack.Idle;
         _attackRatio = data.AttackRatio;
@@ -41,6 +45,9 @@ public class BoxerController : MonoBehaviour
         _jumpHeight = data.JumpHeight;
         _reachField = data.ReachField;
         _speed = data.Speed;
+
+        Punch_APC.Init(_damagePerAttack);
+        Kick_APC.Init(_damagePerAttack);
     }
 
     // Update is called once per frame
@@ -125,16 +132,33 @@ public class BoxerController : MonoBehaviour
         _isAir = false;
     }
 
-    public void OnInjured()
+    public void OnInjured(int damage)
     {
-        StartCoroutine(PerformInjured());
+        StartCoroutine(PerformInjured(damage));
     }
 
-    IEnumerator PerformInjured()
+    IEnumerator PerformInjured(int damage)
     {
-        PerformBlocking(true);
-        yield return new WaitForSeconds(1f);
-        PerformBlocking(false);
-        Debug.Log("PerformInjured");
+        if (CheckKnockDown(damage))
+        {
+            RackStatus = Rack.KnockDown;
+            yield return new WaitForSeconds(1f);
+            Debug.Log(gameObject.name + "is dead!");
+        }
+        else
+        {
+            RackStatus = Rack.Injured;
+            PerformBlocking(true);
+            yield return new WaitForSeconds(1f);
+            PerformBlocking(false);
+            RackStatus = Rack.Idle;
+        }
+        Debug.Log("PerformInjured:" + RackStatus);
+    }
+
+    bool CheckKnockDown(int damage)
+    {
+        _hitPoints -= damage;
+        return _hitPoints <= 0;
     }
 }
